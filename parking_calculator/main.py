@@ -3,13 +3,22 @@ from datetime import datetime, timedelta
 
 def main():
     data = Path("input.txt").read_text(encoding="utf-8")
+    fees = {}
     for line in data.splitlines()[2:]:
         parts = line.split("\t")
-        print(parking_fee_calculator(parts[2], parts[4]))
+        try:
+            start = datetime.fromisoformat(parts[2])
+            end = datetime.fromisoformat(parts[4])
+            fees[parts[0]] = parking_fee_calculator(start, end)
+        except ValueError:
+            print("Nem megfelelő dátum formátum")
+    
+    with open("fees.txt", "w") as f:
+        for plate, fee in fees.items():
+            f.write(f"{plate}: {fee}Ft\n")
+        
 
 def parking_fee_calculator(start, end):
-    start = datetime.fromisoformat(start)
-    end = datetime.fromisoformat(end)
     time = end - start
 
     if time.days == 0:
@@ -18,17 +27,17 @@ def parking_fee_calculator(start, end):
         time -= timedelta(minutes=30)
 
         if time <= timedelta(hours=3):
-            if time.seconds % 3600 != 0:
-                return (time // timedelta(hours=1) + 1) * 300  
-            else:
-                return time // timedelta(hours=1) * 300
-        time -= timedelta(hours=3)
-
-        if time < timedelta(hours=20, minutes=30):
-            if time.seconds % 3600 != 0:
-                return 900 + (time // timedelta(hours=1) + 1) * 500
-            else:
-                return 900 + time // timedelta(hours=1) * 500
+            base_price = 0
+            fee = 300
+        else:
+            base_price = 900
+            fee = 500
+            time -= timedelta(hours=3)
+        
+        if time.seconds % 3600 != 0:
+            return base_price + (time // timedelta(hours=1) + 1) * fee
+        else:
+            return base_price + time // timedelta(hours=1) * fee
     else:
         if time.seconds % 3600 == 0:
             return time.days * 10000 + time.seconds // 3600 * 500
