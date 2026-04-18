@@ -11,6 +11,8 @@ def main():
             print(next_magic_num(int(nums[0]) ** int(nums[1])))
 
 def next_magic_num(n):
+    if (n < 9):
+        return n + 1 
     num_len = len(str(n))
     first_half = str(n)[:((num_len + 1) // 2)]
     first_half_reversed = int(first_half[::-1])
