@@ -9,7 +9,10 @@ def main():
         try:
             start = datetime.fromisoformat(parts[2])
             end = datetime.fromisoformat(parts[4])
-            fees[parts[0]] = parking_fee_calculator(start, end)
+            fee = parking_fee_calculator(start, end)
+            print(f"{fee} Ft")
+            fees[parts[0]] = fee
+
         except ValueError:
             print("Nem megfelelő dátum formátum")
     
