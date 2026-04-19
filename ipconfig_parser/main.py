@@ -12,26 +12,26 @@ def main():
             }
         adapter = {}
         last_key = ""
-        has_config = True
+        has_header = True
         for line in data.splitlines():
             if "adapter" in line:
-                has_config = False
+                has_header = False
                 if len(adapter) != 0:
                     file_json["adapters"].append(adapter)
                     adapter = {}
                 adapter["adapter_name"] = line.split(":")[0]
-            elif not line.isspace():
-                if ":" in line and line.split(":", 1)[1].strip() != "":
+            elif line.strip() != "":
+                if ": " in line:
                     last_key = line.split(".")[0].strip().lower().replace(" ", "_")
                     line_data = line.split(":", 1)[1].strip()
-                    if has_config:
-                        if "config" not in file_json.keys():
-                            file_json["config"] = {last_key: line_data}
+                    if has_header:
+                        if "header" not in file_json.keys():
+                            file_json["header"] = {last_key: line_data}
                         else:
-                            file_json["config"].update({last_key: line_data})
+                            file_json["header"].update({last_key: line_data})
                     else:
                         adapter[last_key] = line_data  
-                elif len(adapter) != 0 and last_key != "" and ":" not in line and line.strip() != "":
+                elif last_key != "":
                     if type(adapter[last_key]) == list:
                         adapter[last_key].append(line.strip())
                     else:
@@ -41,8 +41,6 @@ def main():
         
         contents.append(file_json)
     print(json.dumps(contents, indent=2))
-
-
 
 if __name__ == "__main__":
     main()
