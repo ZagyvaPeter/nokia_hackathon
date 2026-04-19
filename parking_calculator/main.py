@@ -2,26 +2,29 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 def main():
-    data = Path("input.txt").read_text(encoding="utf-8")
-    fees = {}
-    for line in data.splitlines()[2:]:
-        parts = line.split("\t")
-        try:
-            start = datetime.fromisoformat(parts[2])
-            end = datetime.fromisoformat(parts[4])
-            if (start <= end):
-                fee = parking_fee_calculator(start, end)
-                print(f"{fee}")
-                fees[parts[0]] = fee
-            else:
-                print("A belépési időnek korábban kell lennie mint a távozásnak")
+    try:
+        data = Path("input.txt").read_text(encoding="utf-8")
+        fees = {}
+        for line in data.splitlines()[2:]:
+            parts = line.split("\t")
+            try:
+                start = datetime.fromisoformat(parts[2])
+                end = datetime.fromisoformat(parts[4])
+                if (start <= end):
+                    fee = parking_fee_calculator(start, end)
+                    print(f"{fee}")
+                    fees[parts[0]] = fee
+                else:
+                    print("A belépési időnek korábban kell lennie mint a távozásnak")
 
-        except ValueError:
-            print("Nem megfelelő dátum formátum")
-    
-    with open("fees.txt", "w") as f:
-        for plate, fee in fees.items():
-            f.write(f"{plate}: {fee}Ft\n")
+            except ValueError:
+                print("Nem megfelelő dátum formátum")
+        
+        with open("fees.txt", "w") as f:
+            for plate, fee in fees.items():
+                f.write(f"{plate}: {fee}Ft\n")
+    except:
+        print("Hiba!")
         
 
 def parking_fee_calculator(start, end):

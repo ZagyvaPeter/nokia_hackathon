@@ -2,13 +2,16 @@ from pathlib import Path
 
 
 def main():
-    data = Path("input.txt").read_text(encoding="utf-8")
-    for num in data.splitlines():
-        if num.isnumeric():
-            print(next_magic_num(int(num)))
-        else:
-            nums = num.split("^")
-            print(next_magic_num(int(nums[0]) ** int(nums[1])))
+    try:
+        data = Path("input.txt").read_text(encoding="utf-8")
+        for num in data.splitlines():
+            if num.isnumeric():
+                print(next_magic_num(int(num)))
+            else:
+                nums = num.split("^")
+                print(next_magic_num(int(nums[0]) ** int(nums[1])))
+    except:
+        print("Hiba!")
 
 def next_magic_num(n):
     if (n < 9):
