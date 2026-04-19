@@ -40,7 +40,9 @@ def main():
             file_json["adapters"].append(adapter)
         
         contents.append(file_json)
-    print(json.dumps(contents, indent=2))
+    print(json.dumps(contents, indent=2, ensure_ascii=False))
+    with open("output.json", "w", encoding="utf-8") as f:
+        json.dump(contents, f, indent=2, ensure_ascii=False)
 
 if __name__ == "__main__":
     main()
