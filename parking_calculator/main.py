@@ -10,7 +10,7 @@ def main():
             start = datetime.fromisoformat(parts[2])
             end = datetime.fromisoformat(parts[4])
             fee = parking_fee_calculator(start, end)
-            print(f"{fee} Ft")
+            print(f"{fee}")
             fees[parts[0]] = fee
 
         except ValueError:
